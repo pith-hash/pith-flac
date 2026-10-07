@@ -15,13 +15,18 @@
 //! declared total, so a stream that ends early decodes what it has.
 //!
 //! The crate is `no_std` apart from the `alloc` [`Vec`]
-//! its API returns. Samples are computed in `i64` (a stereo side channel
+//! its API returns; the `std` feature (on by default) links `std` so
+//! the `cdylib` the language SDKs bind through carries a panic
+//! handler. Samples are computed in `i64` (a stereo side channel
 //! is coded one bit wider than the input) and narrowed to `i32` only
 //! after decorrelation, matching the canonical PCM shape the `wav`
 //! module of `pith-audio` emits.
 
-#![no_std]
-#![forbid(unsafe_code)]
+#![cfg_attr(not(feature = "std"), no_std)]
+// `unsafe` is denied everywhere except `ffi`, the C ABI surface the
+// language SDKs bind through: raw pointers exist only at that boundary,
+// and every exported function is a documented `unsafe extern "C"` fn.
+#![deny(unsafe_code)]
 #![deny(missing_docs)]
 
 extern crate alloc;
@@ -29,6 +34,8 @@ extern crate alloc;
 mod crc;
 mod frame;
 mod reader;
+
+pub mod ffi;
 
 use alloc::vec::Vec;
 

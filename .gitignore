@@ -47,6 +47,10 @@ docs/public/install.ps1
 __pycache__/
 *.pyc
 
+# Python SDK build scaffolding
+sdk/python/build/
+*.egg-info/
+
 # Agent artifacts (not committed)
 .jules/
 .code-review-graph/
