@@ -4,7 +4,7 @@
 
 - Repo: `pith-hash/pith-flac`
 - Description: FLAC subset decoding: STREAMINFO, constant/verbatim/fixed subframes, both Rice methods
-- License: Apache-2.0
+- License: MIT
 
 ## Build & Test
 
