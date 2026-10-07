@@ -99,6 +99,28 @@ fn err_kind(e: &Error) -> i32 {
     }
 }
 
+/// Hands a serialized canonical stream to the caller: the exact-length
+/// buffer goes out as an owned boxed slice; [`pith_flac_free`]
+/// reconstructs it from the same length to release it.
+unsafe fn hand_out(canonical: Vec<u8>, out: *mut *mut u8, out_len: *mut usize) {
+    let len = canonical.len();
+    let ptr = alloc::boxed::Box::into_raw(canonical.into_boxed_slice());
+    unsafe {
+        *out = ptr.cast::<u8>();
+        *out_len = len;
+    }
+}
+
+/// Writes the refusal shape through the caller's out-parameters: a
+/// null buffer, zero length and the stable kind code.
+unsafe fn refuse(out: *mut *mut u8, out_len: *mut usize, err: *mut i32, kind: i32) {
+    unsafe {
+        *out = core::ptr::null_mut();
+        *out_len = 0;
+        *err = kind;
+    }
+}
+
 /// Decodes a FLAC stream into the canonical byte stream the SDK
 /// vectors are defined over.
 ///
@@ -133,23 +155,14 @@ pub unsafe extern "C" fn pith_flac_decode(
     let bytes = unsafe { core::slice::from_raw_parts(data, len) };
     match decode_and_serialize(bytes) {
         Ok(canonical) => {
-            let len = canonical.len();
-            // Hand the exact-length buffer to the caller; `pith_flac_free`
-            // reconstructs the boxed slice from the same length.
-            let ptr = alloc::boxed::Box::into_raw(canonical.into_boxed_slice());
             unsafe {
-                *out = ptr.cast::<u8>();
-                *out_len = len;
+                hand_out(canonical, out, out_len);
                 *err = PITH_OK;
             }
             PITH_OK
         }
         Err((status, kind)) => {
-            unsafe {
-                *out = core::ptr::null_mut();
-                *out_len = 0;
-                *err = kind;
-            }
+            unsafe { refuse(out, out_len, err, kind) };
             status
         }
     }
@@ -353,6 +366,24 @@ mod tests {
         assert_eq!(err, PITH_ERR_TRUNCATED);
 
         unsafe { pith_flac_free(core::ptr::null_mut(), 0) };
+    }
+
+    /// Every decoder error maps to its stable kind code.
+    #[test]
+    fn err_kinds_map_one_to_one() {
+        use super::{
+            PITH_ERR_BAD_VALUE, PITH_ERR_INVALID_MAGIC, PITH_ERR_TOO_LARGE, PITH_ERR_TRUNCATED,
+            PITH_ERR_UNSUPPORTED, err_kind,
+        };
+        use pith_digest::Error;
+        assert_eq!(err_kind(&Error::BadValue("x")), PITH_ERR_BAD_VALUE);
+        assert_eq!(
+            err_kind(&Error::InvalidMagic { what: "x" }),
+            PITH_ERR_INVALID_MAGIC
+        );
+        assert_eq!(err_kind(&Error::too_large("x", 0)), PITH_ERR_TOO_LARGE);
+        assert_eq!(err_kind(&Error::truncated("x", 1, 0)), PITH_ERR_TRUNCATED);
+        assert_eq!(err_kind(&Error::Unsupported("x")), PITH_ERR_UNSUPPORTED);
     }
 
     /// The safe core rejects malformed input instead of panicking, and
