@@ -1,0 +1,106 @@
+{
+  "suite": "pith",
+  "crate": "pith-flac",
+  "format_version": 1,
+  "generator": "cargo run --bin gen-reference -- gen",
+  "vectors": [
+    {
+      "name": "fixture-tone",
+      "input_kind": "fixture-file",
+      "input_path": "tests/fixtures/tone.flac",
+      "input_sha256": "f954b800b5476f06529b365ed429da96fbf9961067073e955c1966d5fa098d9e",
+      "streaminfo_min_block_size": 16,
+      "streaminfo_max_block_size": 65535,
+      "streaminfo_sample_rate": 44100,
+      "streaminfo_channels": 1,
+      "streaminfo_bits_per_sample": 16,
+      "streaminfo_total_samples": 44100,
+      "sample_rate": 44100,
+      "channels": 1,
+      "bits_per_sample": 16,
+      "total_samples": 44100,
+      "decoded_samples": 44100,
+      "pcm_i32_le_sha256": "2514eff527051953533d999b57bc3745386432e2a37dcc32ccab77fb67faee6f",
+      "pcm_i32_le_fnv1a64": "3a1160e77c61f2b9"
+    },
+    {
+      "name": "constant-mono-16bit",
+      "input_kind": "inline-hex",
+      "input_hex": "664c61438000002200c012000000000000000ac440f00000000800000000000000000000000000000000fff860000007ff001234fd6f",
+      "sample_rate": 44100,
+      "channels": 1,
+      "bits_per_sample": 16,
+      "total_samples": 8,
+      "decoded_samples": 8,
+      "samples_i32": [4660, 4660, 4660, 4660, 4660, 4660, 4660, 4660],
+      "pcm_i32_le_sha256": "8949c8b20154a8ad94f90be09da09819eb3f6e4327b25df4ff0b28b0d8e9295c",
+      "pcm_i32_le_fnv1a64": "9e2315414d536a25"
+    },
+    {
+      "name": "verbatim-mono-signs",
+      "input_kind": "inline-hex",
+      "input_hex": "664c61438000002200c012000000000000000ac440f00000000800000000000000000000000000000000fff860000007ff020001fffe0003fffc0005fffa0007fff8af0b",
+      "sample_rate": 44100,
+      "channels": 1,
+      "bits_per_sample": 16,
+      "total_samples": 8,
+      "decoded_samples": 8,
+      "samples_i32": [1, -2, 3, -4, 5, -6, 7, -8],
+      "pcm_i32_le_sha256": "b646e9e2e7d9d9cdb8963241f30ef5b14db614b51f24cc9bbfbb8d6773ae4e60",
+      "pcm_i32_le_fnv1a64": "209cbf97ac330015"
+    },
+    {
+      "name": "fixed1-rice4-partitioned",
+      "input_kind": "inline-hex",
+      "input_hex": "664c61438000002200c012000000000000000ac440f00000000800000000000000000000000000000000fff860000007ff1201f40500000000000000000000000000000003e00000000000000000000000010300000000000100000000008000000000400000000020cd7a",
+      "sample_rate": 44100,
+      "channels": 1,
+      "bits_per_sample": 16,
+      "total_samples": 8,
+      "decoded_samples": 8,
+      "samples_i32": [500, -500, 300, 320, 340, 360, 380, 400],
+      "pcm_i32_le_sha256": "4224637b975f1bc8ecc4673122c35fa5c6b01976ac175627c1e1b37a0e68ea39",
+      "pcm_i32_le_fnv1a64": "57959265f7dfb14a"
+    },
+    {
+      "name": "fixed0-rice-escape",
+      "input_kind": "inline-hex",
+      "input_hex": "664c61438000002200c012000000000000000ac440f00000000800000000000000000000000000000000fff860000003e31007cb17848023fd",
+      "sample_rate": 44100,
+      "channels": 1,
+      "bits_per_sample": 16,
+      "total_samples": 8,
+      "decoded_samples": 4,
+      "samples_i32": [-15, 15, 0, 1],
+      "pcm_i32_le_sha256": "edc39f894f69e2678320dfe2884634e7d59ebee9324ad4d5a3ad4889f14c80a2",
+      "pcm_i32_le_fnv1a64": "8f8d061ed1f929c9"
+    },
+    {
+      "name": "stereo-left-side",
+      "input_kind": "inline-hex",
+      "input_hex": "664c61438000002200c012000000000000000ac442f00000000400000000000000000000000000000000fff860800003e8020064ff9c0064ff9c02001e7fdd00119ffc4038c7",
+      "sample_rate": 44100,
+      "channels": 2,
+      "bits_per_sample": 16,
+      "total_samples": 4,
+      "decoded_samples": 8,
+      "samples_i32": [100, 40, -100, 40, 100, -40, -100, -40],
+      "pcm_i32_le_sha256": "ad4f6b88c82175e563cf7b84e4b7ba62e0d3ab97bd8447011c2ea4817c085d9f",
+      "pcm_i32_le_fnv1a64": "ff5258122066d21d"
+    }
+  ],
+  "error_vectors": [
+    {
+      "name": "not-a-flac-stream",
+      "input_kind": "inline-hex",
+      "input_hex": "6e6f7065",
+      "error": "invalid-magic"
+    },
+    {
+      "name": "headerless-stream",
+      "input_kind": "inline-hex",
+      "input_hex": "664c6143",
+      "error": "truncated"
+    }
+  ]
+}

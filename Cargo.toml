@@ -1,0 +1,25 @@
+[package]
+name = "pith-flac"
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+repository = "https://github.com/pith-hash/pith-flac"
+homepage = "https://github.com/pith-hash/pith-flac"
+description = "FLAC subset decoding: STREAMINFO, constant/verbatim/fixed subframes, both Rice methods (RFC 9639)"
+readme = "README.md"
+categories = ["algorithms", "cryptography"]
+keywords = ["flac", "audio", "decoder", "pcm", "hashing"]
+
+[dependencies]
+pith-digest = { git = "https://github.com/pith-hash/pith-digest.git", branch = "main" }
+
+# Vector generator: regenerates reference.json (CI verifies it is current,
+# CD ships it with the SDK artifacts).
+[[bin]]
+name = "gen-reference"
+path = "tools/gen-reference/main.rs"
+
+[lints.rust]
+unsafe_code = "forbid"
+missing_docs = "deny"

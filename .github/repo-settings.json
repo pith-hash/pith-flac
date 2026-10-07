@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "tier": 1,
+  "description": "FLAC subset decoding: STREAMINFO, constant/verbatim/fixed subframes, both Rice methods",
+  "homepage": "https://github.com/pith-hash/pith-flac",
+  "topics": [
+    "rust",
+    "flac",
+    "audio",
+    "hashing"
+  ]
+}
