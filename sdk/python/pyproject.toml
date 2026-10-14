@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pith-flac"
-version = "0.1.0"
+version = "0.1.1-beta.1"
 description = "FLAC decoding SDK: STREAMINFO, constant/verbatim/fixed subframes and both Rice methods via the pith-flac Rust cdylib (ctypes, zero-dep)"
 license = "MIT"
 requires-python = ">=3.9"

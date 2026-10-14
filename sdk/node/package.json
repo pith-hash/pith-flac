@@ -1,6 +1,6 @@
 {
   "name": "@pith-hash/pith-flac",
-  "version": "0.1.0",
+  "version": "0.1.1-beta.1",
   "description": "FLAC decoding SDK: STREAMINFO, constant/verbatim/fixed subframes and both Rice methods via the pith-flac Rust cdylib (koffi, prebuilt)",
   "license": "MIT",
   "main": "index.js",
